@@ -1,28 +1,19 @@
-process.env.NODE_ENV = "test"
+const sqlForPartialUpdate = require("../../helpers/partialUpdate");
 
-const db = require('../../db');
-const app = require('../../app')
-const { createData } = require('../../_test-common');
-const sqlForPartialUpdate = require('../../helpers/partialUpdate')
 
-beforeEach(createData)
+describe("partialUpdate()", () => {
+  it("should generate proper partial update query with 1 field", function () {
+    const {query, values} = sqlForPartialUpdate(
+        "companies",
+        {name: "Test"},
+        "description",
+        "test description"
+    );
 
-describe("sqlForPartialUpdate()", () => {
-  test("should generate a proper partial update query with just 1 field",
-      async function () {
-    // const injection = sqlForPartialUpdate(`companies`, {"junk": "0"}, `num_employees = 1; INSERT INTO companies (
-    //   handle,
-    //   name,
-    //   num_employees,
-    //   description,
-    //   logo_url)
-    // VALUES (hahaahaa, IhackedU, 1, hacked)
-    // RETURNING handle;`, 1)
-    // let worked = await db.query(injection.query)
-    // expect(worked).toEqual('hahaahaa')
-    // const companies = `SELECT handle FROM companies`
-    // let result = await db.query(companies)
-    expect(2).toEqual(2);
+    expect(query).toEqual(
+        "UPDATE companies SET name=$1 WHERE description=$2 RETURNING *"
+    );
 
+    expect(values).toEqual(["Test", "test description"]);
   });
 });
