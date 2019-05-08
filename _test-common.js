@@ -1,5 +1,7 @@
 const db = require('./db');
 
+
+
 async function createData() {
     await db.query("DELETE FROM companies");
 
@@ -14,10 +16,11 @@ async function createData() {
     `, [
         "SBUX",
         "Starbucks",
-        "100000",
+        100000,
         "seattle based coffee company, we burn our coffee often, includes sugar",
         "https://starbucks.com/logo.jpg",
     ])
+
 }
 
 module.exports = {
