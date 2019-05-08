@@ -20,9 +20,9 @@ CREATE TABLE jobs (
     title text NOT NULL,
     salary float NOT NULL,
     equity float NOT NULL CHECK (equity <= 1), 
-    company_handle text REFERENCES NOT NULL companies ON DELETE CASCADE, 
-    date_posted date DATETIME, 
-)
+    company_handle text NOT NULL REFERENCES companies ON DELETE CASCADE, 
+    date_posted TIMESTAMP without time zone
+);
 INSERT INTO companies 
             (handle, name, num_employees, description, logo_url)
             VALUES ('a', 'a', 1, 'a1 sauce', 'sauce') 
@@ -35,3 +35,9 @@ INSERT INTO companies
               (handle, name, num_employees, description, logo_url)
             VALUES ('c', 'c', 3, 'c3po', 'androids') 
             RETURNING handle, name, num_employees, description, logo_url;
+INSERT INTO jobs
+              (title, salary, equity, company_handle, date_posted)
+            Values ('peon', 1.00, 0, 'c', CURRENT_TIMESTAMP);
+INSERT INTO jobs
+              (title, salary, equity, company_handle, date_posted)
+            Values ('tester', 1000.00, 0, 'b', CURRENT_TIMESTAMP);
