@@ -4,6 +4,7 @@ const express = require("express");
 const ExpressError = require("./helpers/expressError");
 const morgan = require("morgan");
 const app = express();
+const sqlPartial = require('./helpers/partialUpdate');
 app.use(express.json());
 
 // add logging system

@@ -12,7 +12,7 @@
  *
  */
 
-function sqlForPartialUpdate(table, items, key, id) {
+function sqlForPartialUpdate(table, items, targetKey, id) {
   // keep track of item indexes
   // store all the columns we want to update and associate with vals
 
@@ -25,15 +25,14 @@ function sqlForPartialUpdate(table, items, key, id) {
       delete items[key];
     }
   }
-
   for (let column in items) {
     columns.push(`${column}=$${idx}`);
     idx += 1;
   }
-
   // build query
   let cols = columns.join(", ");
-  let query = `UPDATE ${table} SET ${cols} WHERE ${key}=$${idx} RETURNING *`;
+  // prone to SQL injection, needs to be paramterized refactor later
+  let query = `UPDATE ${table} SET ${cols} WHERE ${targetKey}=$${idx} RETURNING *`;
 
   let values = Object.values(items);
   values.push(id);
