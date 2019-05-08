@@ -12,6 +12,8 @@ class Company {
 		if (data.min_employees && data.max_employees && +data.min_employees > +data.max_employees) {
 			throw new ExpressError('ERROR: min must be less than max', 400);
 		}
+
+		// param.length for query parameterization index
 		if (data.min_employees) {
 			param.push(+data.min_employees);
 			expressions.push(` num_employees >= $${param.length}`);
