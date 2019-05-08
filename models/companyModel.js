@@ -16,26 +16,62 @@ class Company{
         }
         if(data.min_employees){
             param.push(+data.min_employees)
-            expressions.push(`num_employees <= $${param.length}`)
+            expressions.push(` num_employees <= $${param.length}`)
         }
         if(data.max_employees){
             param.push(+data.max_employees)
-            expressions.push(`num_employees >= $${param.length}`)
+            expressions.push(` num_employees >= $${param.length}`)
         }
         if(data.search){
             param.push(data.search)
             expressions.push(`name ILIKE $${param.length}`)
         }
-        console.log(param)
+        
         if (param.length > 0){
-            let formattedQuery = query + 'WHERE'
-            let formattedparam = param.join(' AND ')
-            console.log()
-            let companies = await db.query(formattedQuery,[formattedparam])
+
+            query += ' WHERE ' + expressions.join(' AND ')
+            
+            let companies = await db.query(query, param)
             return companies.rows
         }
         let result = await db.query(`SELECT handle, name FROM companies`)
         return result.rows
     }
+
+    static async create(data) {
+        let results = await db.query(`INSERT INTO companies 
+            (handle, name, num_employees, description, logo_url)
+            VALUES ($1, $2, $3, $4, $5) 
+            RETURNING handle, name, num_employees, description, logo_url;`, [
+                data.handle,
+                data.name, 
+                data.num_employees, 
+                data.description, 
+                data.logo_url
+            ])
+        return results.rows[0];
+    }
+
+    static async findOne(handle) {
+        let results = await db.query(`SELECT * FROM companies 
+            WHERE handle = $1;`, [handle])
+        return results.rows[0];
+    }
+
+    static async update(handle, data) {
+        // function sqlForPartialUpdate(table, items, targetKey, id) 
+        // return { query, values }
+        let { query, values } = partialUpdate('companies', data, 'handle', handle)
+        let results = await db.query(query, values)
+        return results.rows[0];
+    }
+
+    static async delete(handle) {
+        let results = await db.query(`DELETE FROM companies 
+            WHERE handle = $1;`, [handle])
+        return results
+        // .rows.length === 1 ? true : false;
+    }
+
 }
 module.exports = Company;

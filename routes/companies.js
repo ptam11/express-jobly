@@ -3,6 +3,9 @@ const express = require('express');
 const router = new express.Router();
 const db = require('../db');
 const Company = require('../models/companyModel');
+const jsonschema = require('jsonschema');
+const companiesSchema = require('../schema/companiesSchema');
+const expressError = require('../helpers/expressError');
 
 // const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require('../config')
@@ -12,26 +15,65 @@ router.get('/' , async function(req, res, next){
     let params = req.query
     try{
       let result = await Company.findAll(params)
-      return res.json(result)
+      return res.json({companies: result})
     } catch (err){
         next(err)
     }
 })
 
-// router.post('/'){
+router.post('/', async function(req, res, next){
+  try {
+    const isValid = jsonschema.validate(req.body, companiesSchema)
+    if(!isValid) {
+      throw new expressError('invalid form', 400)
+    }
 
-// }
+    const results = await Company.create(req.body);
+    return res.json({company: results})
+  } catch(err) {
+      next(err)
+  }
+})
 
-// router.get('/:handle'){
+router.get('/:handle', async function(req, res, next){
+  try {
+    const results = await Company.findOne(req.params.handle)
+    return res.json({company: results})
+  } catch(err) {
+    next(err)
+  }
+})
 
-// }
+router.patch('/:handle', async function(req, res, next){
+  try {
+    const existingData = await Company.findOne(req.params.handle)
+    // combining the partial data to pass schema
+    const combinedData = Object.assign(existingData, req.body)
+    const isValid = jsonschema.validate(combinedData, companiesSchema)
+    if(!isValid) {
+      throw new expressError('invalid form', 400)
+    }
+    // using req.body to patch only requested data
+    const results = await Company.update(req.params.handle, req.body)
+    return res.json({company: results})
+  } catch(err) {
+    next(err)
+  }
+})
 
-// router.patch('/:handle'){
+router.delete('/:handle', async function(req, res, next){
+  try {
+    const results = await Company.delete(req.params.handle)
+    console.log(results.rowCount)
+    if(results.rowCount === 1) {
+      return res.json({message: "Company deleted"})
+    } else {
+      throw new expressError("Company not found", 400)
+    }
+  } catch(err) {
+    next(err)
+  }
+})
 
-// }
-
-// router.delete('/:handle'){
-
-// }
 
 module.exports = router
