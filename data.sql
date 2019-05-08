@@ -15,3 +15,16 @@ CREATE TABLE companies (
     description text,
     logo_url text
 );
+
+INSERT INTO companies 
+            (handle, name, num_employees, description, logo_url)
+            VALUES ('a', 'a', 1, 'a1 sauce', 'sauce') 
+            RETURNING handle, name, num_employees, description, logo_url;
+INSERT INTO companies 
+              (handle, name, num_employees, description, logo_url)
+            VALUES ('b', 'b', 2, 'b2 vitamins', 'vitamins') 
+            RETURNING handle, name, num_employees, description, logo_url;
+INSERT INTO companies 
+              (handle, name, num_employees, description, logo_url)
+            VALUES ('c', 'c', 3, 'c3po', 'androids') 
+            RETURNING handle, name, num_employees, description, logo_url;
