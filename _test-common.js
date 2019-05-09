@@ -32,10 +32,10 @@ async function createData() {
     VALUES ($1, $2, $3, $4, $5);`, 
   [
     'tester',
-    1000.00,
+    1000,
     0.01,
     'SBUX',
-    '2019-05-08 16:34:42'
+    `2019-05-08T23:34:42.000000`
   ]);
 }
 module.exports = {

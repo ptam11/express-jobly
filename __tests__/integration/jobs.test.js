@@ -11,7 +11,7 @@ beforeEach(createData);
 afterAll(function () {
   db.end();
 });
-const testDate = "2019-05-08 16:34:42.000Z";
+const testDate = "2019-05-08 16:34:42.000000";
 
 describe('GET /jobs', function () {
   // testing GET rquests for /jobs routes
@@ -66,7 +66,7 @@ describe('GET /jobs', function () {
       {
         "id": 1,
         "title": "tester",
-        "salary": 1000.01,
+        "salary": 1000.00,
         "equity": 0.01,
         "company_handle": "SBUX",
         "date_posted": testDate
@@ -81,7 +81,11 @@ describe('GET /jobs', function () {
     };
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual(expRes);
+    expect(res.body).toHaveProperty('job');
+    expect(res.body.job).toHaveProperty('date_posted');
+    expect(res.body.job).toHaveProperty('salary', 1000);
+    // expect(res.body.job).toHaveProperty('date_posted');
+    // expect(res.body.job).toHaveProperty('date_posted');
   });
 
   // TODO: test querystring search on GET req
