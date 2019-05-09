@@ -6,80 +6,71 @@ const app = require('../../app');
 const { createData } = require('../../_test-common');
 const db = require('../../db');
 
+// json of response for just 1 user, needs to be wrapped by object 'user' || 'users'
+const user = {
+  username: 'ptam',
+  first_name: 'Parco',
+  last_name: 'Tam',
+  email: 'ptam@rithm.com'
+};
+
+// username: a primary key that is text
+// password: a non-nullable column
+// first_name: a non-nullable column
+// last_name: a non-nullable column
+// email: a non-nullable column that is and unique
+// photo_url: a column that is text
+// is_admin: a column that is not null, boolean and defaults to false
+
+// create a username 'ptam'
 beforeEach(createData);
 
 afterAll(function() {
   db.end();
 });
 
-describe('GET /companies', function() {
-  // testing GET rquests for /companies routes
+describe('GET /users', function() {
+  // testing GET requests for /users routes
 
-  test('it should retreive a list of companies in the database', async function() {
-    const res = await request(app).get('/companies');
-    const expRes = {
-      companies: [
-        {
-          handle: 'SBUX',
-          name: 'Starbucks'
-        }
-      ]
-    };
+  test('it should retreive a list of users in the database', async function() {
+    const res = await request(app).get('/users');
+    
+    // wrap in users for array of users
+    const expRes = {users: [user]};
 
+    // expect {users: [{username, first_name, last_name, email}, ...]}
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(expRes);
   });
 
-  test('it should retreive a list of companies in the database', async function() {
-    const res = await request(app).get('/companies?search=Starbucks');
-    const expRes = {
-      companies: [
-        {
-          handle: 'SBUX',
-          name: 'Starbucks'
-        }
-      ]
-    };
+  test('BONUS FEATURE: search by users. Not on requirement. DELETE test if not done', async function() {
+    const res = await request(app).get('/users?search=p');
+    
+    // wrap in users for array of users
+    const expRes = {users: [user]};
 
+    // expect {users: [{username, first_name, last_name, email}, ...]}
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(expRes);
   });
 
-  test('it should retreive a filtered list of companies in the database', async function() {
-    const res = await request(app).get('/companies?max_employees=2');
-    const expRes = {
-      companies: []
-    };
-
+  test('it should retrieve a specified user from the DB', async function() {
+    const res = await request(app).get('/user/ptam');
+    
+    // wrap in user object for single user
+    const expRes = {user: user};
+      
+    // expect {user: {username, first_name, last_name, email}}
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(expRes);
   });
 
-  test('it should retreive a specified company from the DB', async function() {
-    const res = await request(app).get('/companies/SBUX');
-    const expRes = {
-      company: {
-        handle: 'SBUX',
-        name: 'Starbucks',
-        num_employees: 100000,
-        description: 'seattle based coffee company, we burn our coffee often, includes sugar',
-        logo_url: 'https://starbucks.com/logo.jpg'
-      }
-    };
-
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual(expRes);
-  });
-
-  // TODO: test querystring search on GET req
-
-  test('it should send error when trying to retreive company not in DB', async function() {
-    const res = await request(app).get('/companies/LOLNO');
+  test('it should receive error for nonexistent user from DB', async function() {
+    const res = await request(app).get('/users/LOLNO');
 
     expect(res.statusCode).toBe(404);
   });
 });
-
 
 describe('POST /companies', function() {
   // testing POST rquests for /companies route
@@ -92,11 +83,9 @@ describe('POST /companies', function() {
       description: 'SF based coffee company, makes infinitely better coffee than SBUX',
       logo_url: 'https://philz.com/logo.jpg'
     };
-    const res = await request(app)
-      .post('/companies')
-      .send(philz);
+    const res = await request(app).post('/companies').send(philz);
     expect(res.statusCode).toBe(201);
-    expect(res.body).toEqual({company: philz});
+    expect(res.body).toEqual({ company: philz });
     let getAll = await db.query(`select * from companies`);
     expect(getAll.rows).toHaveLength(2);
   });
@@ -108,15 +97,11 @@ describe('POST /companies', function() {
       description: 'SF based coffee company, makes infinitely better coffee than SBUX',
       logo_url: 'https://philz.com/logo.jpg'
     };
-    const res = await request(app)
-      .post('/companies')
-      .send(philz);
+    const res = await request(app).post('/companies').send(philz);
     expect(res.statusCode).toBe(400);
     // expect(res.body).toEqual({company: philz});
   });
-
 });
-
 
 describe('PATCH /companies', function() {
   // testing PATCH rquests for /companies route
@@ -128,12 +113,10 @@ describe('PATCH /companies', function() {
       description: 'lol make better coffee',
       logo_url: 'https://booooooooo.com/logo.jpg'
     };
-    const res = await request(app)
-      .patch('/companies/SBUX')
-      .send(body);
+    const res = await request(app).patch('/companies/SBUX').send(body);
     expect(res.statusCode).toBe(200);
     body.handle = 'SBUX';
-    expect(res.body).toEqual({company: body});
+    expect(res.body).toEqual({ company: body });
   });
 
   test('it should throw an error when trying to update company not in DB', async function() {
@@ -143,30 +126,23 @@ describe('PATCH /companies', function() {
       description: 'lol make better coffee',
       logo_url: 'https://booooooooo.com/logo.jpg'
     };
-    const res = await request(app)
-      .patch('/companies/w00t')
-      .send(body);
+    const res = await request(app).patch('/companies/w00t').send(body);
     expect(res.statusCode).toBe(404);
   });
-
 });
-
 
 describe('DELETE /companies', function() {
   // testing DELETE rquests for /companies route
 
   test('it should delete a company from the database', async function() {
-    const res = await request(app)
-      .delete('/companies/SBUX');
+    const res = await request(app).delete('/companies/SBUX');
     expect(res.statusCode).toBe(200);
     let getAll = await db.query(`select * from companies`);
     expect(getAll.rows).toHaveLength(0);
   });
 
   test('it should throw an error when trying to delete company not in DB', async function() {
-    const res = await request(app)
-      .delete('/companies/w00t');
+    const res = await request(app).delete('/companies/w00t');
     expect(res.statusCode).toBe(404);
   });
-
 });
