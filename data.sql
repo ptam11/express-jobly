@@ -43,10 +43,10 @@ INSERT INTO jobs
             Values ('tester', 1000.00, 0, 'b', CURRENT_TIMESTAMP);
 INSERT INTO users
               (username, first_name, last_name, email, photo_url, is_admin)
-            Values ('ptam', "parco", "tam", 'ptam@rithm.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp', false);
+            Values ('ptam', 'parco', 'tam', 'ptam@rithm.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp', false);
 INSERT INTO users
               (username, first_name, last_name, email, photo_url, is_admin)
-            Values ('jmatthias', "json", "mattttttt", 'jmatt@rithm.com', 'http://japamat.com/imgs/headshot.jpg', true);
+            Values ('jmatthias', 'json', 'mattttttt', 'jmatt@rithm.com', 'http://japamat.com/imgs/headshot.jpg', true);
 INSERT INTO users
               (username, first_name, last_name, email, photo_url, is_admin)
-            Values ('rb', "ricky", "b", 'rb@rithm.com', 'https://www.guidedogs.org/wp-content/uploads/2018/01/Mobile.jpg', false);
+            Values ('rb', 'ricky', 'b', 'rb@rithm.com', 'https://www.guidedogs.org/wp-content/uploads/2018/01/Mobile.jpg', false);
