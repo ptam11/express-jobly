@@ -11,22 +11,18 @@ beforeEach(createData);
 afterAll(function () {
   db.end();
 });
-const testDate = "2019-05-08 16:34:42.446803";
+const testDate = "2019-05-08 16:34:42.000Z";
 
 describe('GET /jobs', function () {
   // testing GET rquests for /jobs routes
 
   test('it should retreive a list of jobs in the database', async function () {
-    await db.query(`INSERT INTO jobs
-      (title, salary, equity, company_handle, date_posted)
-      Values ('newer', 1000.00, 0, 'SBUX', 2019-05-09 16:34:42.446803`);
+    // await db.query(`INSERT INTO jobs
+    //   (title, salary, equity, company_handle, date_posted)
+    //   Values ('newer', 1000.00, 0, 'SBUX', 2019-05-09 16:34:42.446803`);
     const res = await request(app).get('/jobs');
     const expRes = {
       jobs: [
-        {
-          title: 'tester',
-          "company_handle": 'SBUX'
-        },
         {
           title: 'tester',
           "company_handle": 'SBUX'
@@ -45,10 +41,6 @@ describe('GET /jobs', function () {
         {
           title: 'tester',
           "company_handle": 'SBUX'
-        },
-        {
-          title: 'tester',
-          "company_handle": 'SBUX'
         }
       ]
     };
@@ -60,7 +52,7 @@ describe('GET /jobs', function () {
   test('it should retreive a filtered list of jobs in the database', async function () {
     const res = await request(app).get('/jobs?min_equity=50');
     const expRes = {
-      job: []
+      jobs: []
     };
 
     expect(res.statusCode).toBe(200);
@@ -68,7 +60,7 @@ describe('GET /jobs', function () {
   });
 
   test('it should retreive a specified company from the DB', async function () {
-    const res = await request(app).get('/jobs/SBUX');
+    const res = await request(app).get('/jobs/1');
     const expRes = {
       job:
       {

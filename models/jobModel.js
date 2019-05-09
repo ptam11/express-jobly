@@ -6,7 +6,7 @@ const partialUpdate = require('../helpers/partialUpdate');
 class Jobs{
 
   static async findAll(data){
-    let query = 'SELECT * FROM jobs';
+    let query = 'SELECT title, company_handle FROM jobs';
     let param = [];
     let expressions = [];
     //use middleware to convert query max/min to number or refactor this
@@ -30,7 +30,7 @@ class Jobs{
       let result = await db.query(query, param);
       return result.rows;
     }
-    let result = await db.query(`SELECT * FROM jobs ORDER BY date_posted DESC`);
+    let result = await db.query(query + ` ORDER BY date_posted DESC`);
     return result.rows;
   }
 

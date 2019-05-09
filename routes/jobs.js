@@ -27,9 +27,6 @@ router.post('/', async function(req, res, next){
       throw new expressError('invalid form', 400);
     }
 
-    console.log(req.body);
-    
-
     const results = await Job.create(req.body);
     return res.status(201).json({job: results});
   } catch(err) {
@@ -73,7 +70,7 @@ router.patch('/:id', async function(req, res, next){
 router.delete('/:id', async function(req, res, next){
   try {
     const results = await Job.delete(req.params.id);
-    console.log(results.rowCount);
+    
     if(results.rowCount === 1) {
       return res.json({message: "Job deleted"});
     } else {

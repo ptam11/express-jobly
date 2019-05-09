@@ -3,6 +3,8 @@ const db = require('./db');
 
 async function createData() {
   await db.query("DELETE FROM companies");
+  await db.query("DELETE FROM jobs");
+  await db.query("SELECT setval('jobs_id_seq', 1, false)");
 
   await db.query(`
         INSERT INTO companies (
@@ -19,10 +21,22 @@ async function createData() {
     "seattle based coffee company, we burn our coffee often, includes sugar",
     "https://starbucks.com/logo.jpg",
   ]);
-  await db.query (`INSERT INTO jobs
-      (title, salary, equity, company_handle, date_posted)
-      Values ('tester', 1000.00, 0, 'SBUX', 2019-05-08 16:34:42.446803);`
-  );
+
+  await db.query (`
+    INSERT INTO jobs (
+      title,
+      salary,
+      equity,
+      company_handle,
+      date_posted)
+    VALUES ($1, $2, $3, $4, $5);`, 
+  [
+    'tester',
+    1000.00,
+    0.01,
+    'SBUX',
+    '2019-05-08 16:34:42'
+  ]);
 }
 module.exports = {
   createData
