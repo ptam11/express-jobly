@@ -1,1 +1,72 @@
-{}
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "properties": {
+    "id": {
+      "$id": "#/properties/id",
+      "type": "integer",
+      "title": "The Id Schema",
+      "default": 0,
+      "examples": [
+        2
+      ]
+    },
+    "title": {
+      "$id": "#/properties/title",
+      "type": "string",
+      "title": "The Title Schema",
+      "default": "",
+      "examples": [
+        "tester"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "salary": {
+      "$id": "#/properties/salary",
+      "type": "integer",
+      "title": "The Salary Schema",
+      "default": 0,
+      "examples": [
+        1000
+      ]
+    },
+    "equity": {
+      "$id": "#/properties/equity",
+      "type": "integer",
+      "title": "The Equity Schema",
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "company_handle": {
+      "$id": "#/properties/company_handle",
+      "type": "string",
+      "title": "The Company_handle Schema",
+      "default": "",
+      "examples": [
+        "b"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "date_posted": {
+      "$id": "#/properties/date_posted",
+      "type": "string",
+      "title": "The Date_posted Schema",
+      "default": "",
+      "examples": [
+        "2019-05-08T23:34:42.446Z"
+      ],
+      "pattern": "^(.*)$"
+    }
+  },
+  "required": [
+    "title",
+    "salary",
+    "equity",
+    "company_handle"
+  ]
+}
