@@ -33,19 +33,23 @@ class User {
   }
 
   /**
-  * create new  
+  * create new row in DB
+  * data may not contain is_admin, if not, DEFAULT false in 'data.sql'
   **/
   static async create(data) {
     let results = await db.query(
       `INSERT INTO users 
-          (username, first_name, last_name, email, photo_url)
-          VALUES ($1, $2, $3, $4, $5) 
+          (username, first_name, last_name, email, photo_url, is_admin)
+          VALUES ($1, $2, $3, $4, $5, $6) 
           RETURNING username, first_name, last_name, email, photo_url;`,
-      [ data.username, data.first_name, data.last_name, data.email, data.photo_url ]
+      [ data.username, data.first_name, data.last_name, data.email, data.photo_url, data.is_admin ]
     );
     return results.rows[0];
   }
 
+  /**
+  * search 'username' from URL param
+  **/
   static async findOne(username) {
     // find user by username
     let result = await db.query(
@@ -55,26 +59,30 @@ class User {
     );
 
     // return 1 obj result
-    return result;
+    return result.rows[0];
   }
 
   static async update(username, data) {
     // use helper function partialUpdate(table, items, targetKey, targetVal)
     // returns parameterized query values and query
     let { query, values } = partialUpdate('users', data, 'username', username);
-    
-
+  
+    // return patched results
     let result = await db.query(query, values);
-    return result;
+    return result.rows[0];
   }
 
-  static async delete(id) {
+  static async delete(username) {
+    // delete
     let results = await db.query(
-      `DELETE FROM jobs 
-          WHERE id = $1;`,
-      [ id ]
+      `DELETE FROM users 
+          WHERE username = $1;
+          RETURNING *`,
+      [ username ]
     );
-    return results;
+
+    // return results, should always be 1, not 0
+    return results.rows[0];
   }
 }
 module.exports = User;
