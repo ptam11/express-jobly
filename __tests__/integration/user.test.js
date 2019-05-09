@@ -63,6 +63,9 @@ describe('GET /users', function() {
     // delete item photo_url since not returned
     delete user['photo_url'];
     delete user['password'];
+    delete user['is_admin'];
+
+    console.log()
 
     // wrap in users for array of users
     const expRes = { users: [ user ] };
@@ -78,6 +81,7 @@ describe('GET /users', function() {
     // delete item photo_url since not returned
     delete user['photo_url'];
     delete user['password'];
+    delete user['is_admin'];
 
     // wrap in users for array of users
     const expRes = { users: [ user ] };
@@ -89,6 +93,8 @@ describe('GET /users', function() {
 
   test('it should retrieve a specified user from the DB', async function() {
     const res = await request(app).get(`/users/${user.username}`);
+    delete user['password'];
+    delete user['is_admin'];
 
     const expRes = { user: user };
 
@@ -99,6 +105,7 @@ describe('GET /users', function() {
 
   test('it should receive error for nonexistent user from DB', async function() {
     const res = await request(app).get('/users/LOLNO');
+  
 
     expect(res.statusCode).toBe(404);
   });

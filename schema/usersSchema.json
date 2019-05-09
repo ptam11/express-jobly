@@ -9,7 +9,7 @@
     "password",
     "first_name",
     "last_name",
-    "photo_url"
+    "email"
   ],
   "properties": {
     "username": {

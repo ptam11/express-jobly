@@ -24,7 +24,8 @@ router.post('/', async function(req, res, next){
     const isValid = jsonschema.validate(req.body, usersSchema);
     
     if(isValid.errors.length) {
-      throw new ExpressError('invalid form', 400);
+      let errors = isValid.errors.map(err => err.stack);
+      throw new ExpressError(errors, 400);
     }
     try{
       const results = await User.create(req.body);
@@ -61,8 +62,8 @@ router.patch('/:username', async function(req, res, next){
     const isValid = jsonschema.validate(combinedData, usersSchema);
     if(isValid.errors.rowCount) {
       // get all errors from schema for all invalid fields
-      let listOfErrors = isValid.errors.map(error => error.stack);
-      throw new ExpressError(listOfErrors, 400);
+      let errors = isValid.errors.map(error => error.stack);
+      throw new ExpressError(errors, 400);
     }
     // using req.body to patch only requested data
     const results = await User.update(req.params.username, req.body);

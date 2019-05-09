@@ -4,6 +4,7 @@ const db = require('./db');
 async function createData() {
   await db.query(`DELETE FROM companies`);
   await db.query(`DELETE FROM jobs`);
+  await db.query(`DELETE FROM users`);
   await db.query(`SELECT setval('jobs_id_seq', 1, false)`);
 
   await db.query(`
@@ -37,6 +38,26 @@ async function createData() {
     'SBUX',
     `2019-05-08T23:34:42.000000`
   ]);
+
+  await db.query (`
+  INSERT INTO users (
+    username,
+    password,
+    first_name,
+    last_name,
+    email,
+    photo_url,
+    is_admin
+  )
+    VALUES (
+      'ptam',
+      'ptam',
+      'parco',
+      'tam',
+      'ptam@rithm.com',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp',
+      false);
+  `);
 }
 module.exports = {
   createData

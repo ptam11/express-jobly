@@ -23,11 +23,11 @@ class User {
 
     if (param.length > 0) {
       // query with 'WHERE' conditions
-      query += ' WHERE ' + expressions.join(' AND ') + 'ORDER BY date_posted DESC';
+      query += ' WHERE ' + expressions.join(' AND ');
       result = await db.query(query, param);
     } else {
       // query all without 'WHERE' condition
-      result = await db.query(query + ` ORDER BY date_posted DESC`);
+      result = await db.query(query);
     }
     return result.rows;
   }
