@@ -2,7 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const User = require('../models/userModel');
 const jsonschema = require('jsonschema');
-const userSchema = require('../schema/userSchema');
+const usersSchema = require('../schema/usersSchema');
 const ExpressError = require('../helpers/ExpressError');
 
 // const jwt = require("jsonwebtoken");
@@ -21,7 +21,7 @@ router.get('/' , async function(req, res, next){
 
 router.post('/', async function(req, res, next){
   try {
-    const isValid = jsonschema.validate(req.body, userSchema);
+    const isValid = jsonschema.validate(req.body, usersSchema);
     
     if(isValid.errors.length) {
       throw new ExpressError('invalid form', 400);
@@ -58,7 +58,7 @@ router.patch('/:username', async function(req, res, next){
     }
     // combining the partial data to pass schema
     const combinedData = Object.assign(existingData, req.body);
-    const isValid = jsonschema.validate(combinedData, userSchema);
+    const isValid = jsonschema.validate(combinedData, usersSchema);
     if(isValid.errors.rowCount) {
       // get all errors from schema for all invalid fields
       let listOfErrors = isValid.errors.map(error => error.stack);
