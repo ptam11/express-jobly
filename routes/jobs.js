@@ -13,7 +13,7 @@ router.get('/' , async function(req, res, next){
   let params = req.query;
   try{
     let result = await Job.findAll(params);
-    return res.json({jobs: result}, 200);
+    return res.status(200).json({jobs: result});
   } catch (err){
     next(err);
   }
@@ -31,7 +31,7 @@ router.post('/', async function(req, res, next){
     
 
     const results = await Job.create(req.body);
-    return res.json({job: results}, 201);
+    return res.status(201).json({job: results});
   } catch(err) {
     next(err);
   }
