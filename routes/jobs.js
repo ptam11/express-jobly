@@ -27,6 +27,9 @@ router.post('/', async function(req, res, next){
       throw new expressError('invalid form', 400);
     }
 
+    console.log(req.body);
+    
+
     const results = await Job.create(req.body);
     return res.json({job: results}, 201);
   } catch(err) {
@@ -34,9 +37,10 @@ router.post('/', async function(req, res, next){
   }
 });
 
-router.get('/:handle', async function(req, res, next){
+router.get('/:id', async function(req, res, next){
   try {
-    const results = await Job.findOne(req.params.handle);
+    const results = await Job.findOne(req.params.id);
+    
     if (!results.rowCount) {
       throw new expressError('job not found', 404);
     }
@@ -46,9 +50,9 @@ router.get('/:handle', async function(req, res, next){
   }
 });
 
-router.patch('/:handle', async function(req, res, next){
+router.patch('/:id', async function(req, res, next){
   try {
-    const existingData = await Job.findOne(req.params.handle);
+    const existingData = await Job.findOne(req.params.id);
     if (!existingData.rowCount) {
       throw new expressError('job not found', 404);
     }
@@ -56,19 +60,19 @@ router.patch('/:handle', async function(req, res, next){
     const combinedData = Object.assign(existingData, req.body);
     const isValid = jsonschema.validate(combinedData, jobSchema);
     if(isValid.errors.rowCount) {
-      throw new expressError('invalid form', 400);
+      throw new expressError('invalid update job form', 400);
     }
     // using req.body to patch only requested data
-    const results = await Job.update(req.params.handle, req.body);
-    return res.json({job: results});
+    const results = await Job.update(req.params.id, req.body);
+    return res.json({job: results.rows[0]});
   } catch(err) {
     next(err);
   }
 });
 
-router.delete('/:handle', async function(req, res, next){
+router.delete('/:id', async function(req, res, next){
   try {
-    const results = await Job.delete(req.params.handle);
+    const results = await Job.delete(req.params.id);
     console.log(results.rowCount);
     if(results.rowCount === 1) {
       return res.json({message: "Job deleted"});
