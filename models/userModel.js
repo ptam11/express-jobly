@@ -39,10 +39,10 @@ class User {
   static async create(data) {
     let results = await db.query(
       `INSERT INTO users 
-          (username, first_name, last_name, email, photo_url, is_admin)
-          VALUES ($1, $2, $3, $4, $5, $6) 
+          (username, password, first_name, last_name, email, photo_url, is_admin)
+          VALUES ($1, $2, $3, $4, $5, $6, $7) 
           RETURNING username, first_name, last_name, email, photo_url;`,
-      [ data.username, data.first_name, data.last_name, data.email, data.photo_url, data.is_admin ]
+      [ data.username, data.password, data.first_name, data.last_name, data.email, data.photo_url, data.is_admin ]
     );
     return results.rows[0];
   }

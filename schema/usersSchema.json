@@ -6,15 +6,26 @@
   "title": "The Root Schema",
   "required": [
     "username",
+    "password",
     "first_name",
     "last_name",
-    "email"
+    "photo_url"
   ],
   "properties": {
     "username": {
       "$id": "#/properties/username",
       "type": "string",
       "title": "The Username Schema",
+      "default": "",
+      "examples": [
+        "ptam"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "password": {
+      "$id": "#/properties/password",
+      "type": "string",
+      "title": "The Password Schema",
       "default": "",
       "examples": [
         "ptam"

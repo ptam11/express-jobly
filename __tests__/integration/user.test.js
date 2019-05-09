@@ -24,6 +24,7 @@ beforeEach(() => {
   createData;
   user = {
     username: 'ptam',
+    password: 'ptam',
     first_name: 'Parco',
     last_name: 'Tam',
     email: 'ptam@rithm.com',
@@ -34,6 +35,7 @@ beforeEach(() => {
 
   newUser = {
     username: 'jmatthias',
+    password: 'jmatthias',
     first_name: 'Jason',
     last_name: 'Matthias',
     email: 'jmatthias@rithm.com',
@@ -60,6 +62,7 @@ describe('GET /users', function() {
 
     // delete item photo_url since not returned
     delete user['photo_url'];
+    delete user['password'];
 
     // wrap in users for array of users
     const expRes = { users: [ user ] };
@@ -74,6 +77,7 @@ describe('GET /users', function() {
 
     // delete item photo_url since not returned
     delete user['photo_url'];
+    delete user['password'];
 
     // wrap in users for array of users
     const expRes = { users: [ user ] };
