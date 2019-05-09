@@ -168,8 +168,10 @@ describe('PATCH /jobs', function () {
       .patch('/jobs/1')
       .send(body);
     expect(res.statusCode).toBe(200);
-    body.handle = 'SBUX';
-    expect(res.body).toEqual({ job: body });
+    expect(res.body.job).toHaveProperty('title', "tester");
+    expect(res.body.job).toHaveProperty('salary');
+    expect(res.body.job).toHaveProperty('equity');
+    expect(res.body.job).toHaveProperty('company_handle', 'SBUX');
   });
 
   test('it should throw an error when trying to update job not in DB', async function () {
