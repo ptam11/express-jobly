@@ -35,35 +35,34 @@ class Jobs{
   }
 
   static async create(data) {
-    let results = await db.query(`INSERT INTO companies 
+    let results = await db.query(`INSERT INTO jobs 
           (title, salary, equity, company_handle, date_posted)
-          VALUES ($1, $2, $3, $4, TIMESTAMP without time zone) 
+          VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP) 
           RETURNING id, title, salary, equity, company_handle, date_posted;`, [
       data.title,
-      data.slaray, 
+      data.salary, 
       data.equity, 
       data.company_handle
     ]);
     return results.rows[0];
   }
 
-  static async findOne(handle) {
-    let results = await db.query(`SELECT * FROM companies 
-          WHERE handle = $1;`, [handle]);
-    return results.rows[0];
-  }
-
-  static async update(handle, data) {
-    let { query, values } = partialUpdate('companies', data, 'handle', handle);
-    let results = await db.query(query, values);
-    return results.rows[0];
-  }
-
-  static async delete(handle) {
-    let results = await db.query(`DELETE FROM companies 
-          WHERE handle = $1;`, [handle]);
+  static async findOne(id) {
+    let results = await db.query(`SELECT * FROM jobs 
+          WHERE id = $1;`, [id]);
     return results;
-    // .rows.length === 1 ? true : false;
+  }
+
+  static async update(id, data) {
+    let { query, values } = partialUpdate('jobs', data, 'id', id);
+    let results = await db.query(query, values);
+    return results;
+  }
+
+  static async delete(id) {
+    let results = await db.query(`DELETE FROM jobs 
+          WHERE id = $1;`, [id]);
+    return results;
   }
 
 }
