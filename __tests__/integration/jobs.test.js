@@ -11,17 +11,18 @@ beforeEach(createData);
 afterAll(function() {
   db.end();
 });
+const testDate = "2019-05-08 16:34:42.446803"
 
-describe('GET /companies', function() {
-  // testing GET rquests for /companies routes
+describe('GET /jobs', function() {
+  // testing GET rquests for /jobs routes
 
-  test('it should retreive a list of companies in the database', async function() {
-    const res = await request(app).get('/companies');
+  test('it should retreive a list of jobs in the database', async function() {
+    const res = await request(app).get('/jobs');
     const expRes = {
-      companies: [
+      jobs: [
         {
-          handle: 'SBUX',
-          name: 'Starbucks'
+          title: 'tester',
+          "company_handle": 'SBUX'
         }
       ]
     };
@@ -30,13 +31,13 @@ describe('GET /companies', function() {
     expect(res.body).toEqual(expRes);
   });
 
-  test('it should retreive a list of companies in the database', async function() {
-    const res = await request(app).get('/companies?search=Starbucks');
+  test('it should retreive a list of jobs ordered by recent', async function() {
+    const res = await request(app).get('/jobs?search=tester');
     const expRes = {
-      companies: [
+      jobs: [
         {
-          handle: 'SBUX',
-          name: 'Starbucks'
+          title: 'tester',
+          "company_handle": 'SBUX'
         }
       ]
     };
@@ -45,10 +46,10 @@ describe('GET /companies', function() {
     expect(res.body).toEqual(expRes);
   });
 
-  test('it should retreive a filtered list of companies in the database', async function() {
-    const res = await request(app).get('/companies?max_employees=2');
+  test('it should retreive a filtered list of jobs in the database', async function() {
+    const res = await request(app).get('/jobs?min_equity=50');
     const expRes = {
-      companies: []
+      job: []
     };
 
     expect(res.statusCode).toBe(200);
@@ -56,9 +57,15 @@ describe('GET /companies', function() {
   });
 
   test('it should retreive a specified company from the DB', async function() {
-    const res = await request(app).get('/companies/SBUX');
+    const res = await request(app).get('/jobs/SBUX');
     const expRes = {
-      company: {
+      job:
+        {
+          title: 'tester',
+          "company_handle": 'SBUX'
+          
+        }
+        company: {
         handle: 'SBUX',
         name: 'Starbucks',
         num_employees: 100000,
@@ -74,15 +81,15 @@ describe('GET /companies', function() {
   // TODO: test querystring search on GET req
 
   test('it should send error when trying to retreive company not in DB', async function() {
-    const res = await request(app).get('/companies/LOLNO');
+    const res = await request(app).get('/jobs/LOLNO');
 
     expect(res.statusCode).toBe(404);
   });
 });
 
 
-describe('POST /companies', function() {
-  // testing POST rquests for /companies route
+describe('POST /jobs', function() {
+  // testing POST rquests for /jobs route
 
   test('it should add a company to the database', async function() {
     const philz = {
@@ -93,11 +100,11 @@ describe('POST /companies', function() {
       logo_url: 'https://philz.com/logo.jpg'
     };
     const res = await request(app)
-      .post('/companies')
+      .post('/jobs')
       .send(philz);
     expect(res.statusCode).toBe(201);
     expect(res.body).toEqual({company: philz});
-    let getAll = await db.query(`select * from companies`);
+    let getAll = await db.query(`select * from jobs`);
     expect(getAll.rows).toHaveLength(2);
   });
 
@@ -109,7 +116,7 @@ describe('POST /companies', function() {
       logo_url: 'https://philz.com/logo.jpg'
     };
     const res = await request(app)
-      .post('/companies')
+      .post('/jobs')
       .send(philz);
     expect(res.statusCode).toBe(400);
     // expect(res.body).toEqual({company: philz});
@@ -118,8 +125,8 @@ describe('POST /companies', function() {
 });
 
 
-describe('PATCH /companies', function() {
-  // testing PATCH rquests for /companies route
+describe('PATCH /jobs', function() {
+  // testing PATCH rquests for /jobs route
 
   test('it should update a company in the database', async function() {
     const body = {
@@ -129,7 +136,7 @@ describe('PATCH /companies', function() {
       logo_url: 'https://booooooooo.com/logo.jpg'
     };
     const res = await request(app)
-      .patch('/companies/SBUX')
+      .patch('/jobs/SBUX')
       .send(body);
     expect(res.statusCode).toBe(200);
     body.handle = 'SBUX';
@@ -144,7 +151,7 @@ describe('PATCH /companies', function() {
       logo_url: 'https://booooooooo.com/logo.jpg'
     };
     const res = await request(app)
-      .patch('/companies/w00t')
+      .patch('/jobs/w00t')
       .send(body);
     expect(res.statusCode).toBe(404);
   });
@@ -152,20 +159,20 @@ describe('PATCH /companies', function() {
 });
 
 
-describe('DELETE /companies', function() {
-  // testing DELETE rquests for /companies route
+describe('DELETE /jobs', function() {
+  // testing DELETE rquests for /jobs route
 
   test('it should delete a company from the database', async function() {
     const res = await request(app)
-      .delete('/companies/SBUX');
+      .delete('/jobs/SBUX');
     expect(res.statusCode).toBe(200);
-    let getAll = await db.query(`select * from companies`);
+    let getAll = await db.query(`select * from jobs`);
     expect(getAll.rows).toHaveLength(0);
   });
 
   test('it should throw an error when trying to delete company not in DB', async function() {
     const res = await request(app)
-      .delete('/companies/w00t');
+      .delete('/jobs/w00t');
     expect(res.statusCode).toBe(404);
   });
 

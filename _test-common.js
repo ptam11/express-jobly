@@ -21,9 +21,9 @@ async function createData() {
   ]);
   await db.query (`INSERT INTO jobs
       (title, salary, equity, company_handle, date_posted)
-      Values ('tester', 1000.00, 0, 'SBUX', CURRENT_TIMESTAMP);`
-    )
-  }
+      Values ('tester', 1000.00, 0, 'SBUX', 2019-05-08 16:34:42.446803);`
+  );
+}
 module.exports = {
   createData
 };
