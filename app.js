@@ -8,6 +8,7 @@ const sqlPartial = require('./helpers/partialUpdate');
 const companies = require('./routes/companies');
 const jobs = require('./routes/jobs');
 const users = require('./routes/users');
+const login = require('./routes/login');
 app.use(express.json());
 
 // add logging system
@@ -17,6 +18,7 @@ app.use(morgan("tiny"));
 app.use('/companies', companies);
 app.use('/jobs', jobs);
 app.use('/users', users);
+app.use('/login', login);
 app.use(function(req, res, next) {
   const err = new ExpressError("Not Found", 404);
 
