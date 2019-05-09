@@ -21,7 +21,7 @@ router.get('/' , async function(req, res, next){
 
 router.post('/', async function(req, res, next){
   try {
-    const isValid = jsonschema.validate(req.body, jobsSchema);
+    const isValid = jsonschema.validate(req.body, jobSchema);
     
     if(isValid.errors.length) {
       throw new expressError('invalid form', 400);

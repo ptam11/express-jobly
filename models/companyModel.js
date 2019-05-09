@@ -51,7 +51,7 @@ class Company {
   static async findOne(handle) {
     let results = await db.query(
       `SELECT * FROM companies 
-            WHERE handle = $1\;`,
+            WHERE handle = $1;`,
       [ handle ]
     );
     return results;

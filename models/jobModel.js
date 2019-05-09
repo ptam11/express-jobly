@@ -36,14 +36,13 @@ class Jobs{
 
   static async create(data) {
     let results = await db.query(`INSERT INTO companies 
-          (handle, name, num_employees, description, logo_url)
-          VALUES ($1, $2, $3, $4, $5) 
-          RETURNING handle, name, num_employees, description, logo_url;`, [
-      data.handle,
-      data.name, 
-      data.num_employees, 
-      data.description, 
-      data.logo_url
+          (title, salary, equity, company_handle, date_posted)
+          VALUES ($1, $2, $3, $4, TIMESTAMP without time zone) 
+          RETURNING id, title, salary, equity, company_handle, date_posted;`, [
+      data.title,
+      data.slaray, 
+      data.equity, 
+      data.company_handle
     ]);
     return results.rows[0];
   }
@@ -55,8 +54,6 @@ class Jobs{
   }
 
   static async update(handle, data) {
-    // function sqlForPartialUpdate(table, items, targetKey, id) 
-    // return { query, values }
     let { query, values } = partialUpdate('companies', data, 'handle', handle);
     let results = await db.query(query, values);
     return results.rows[0];
