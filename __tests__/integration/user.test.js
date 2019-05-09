@@ -67,7 +67,7 @@ describe('GET /users', function() {
     expect(res.body).toEqual(expRes);
   });
 
-  test('BONUS FEATURE: search by users. Not on requirement. DELETE test if not done', async function() {
+  test('search by users.', async function() {
     const res = await request(app).get('/users?search=p');
 
     // delete item photo_url since not returned
