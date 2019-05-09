@@ -18,6 +18,7 @@
     "express": "^4.16.4",
     "express-cors": "0.0.3",
     "jsonschema": "^1.2.4",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.9.1",
     "pg": "^7.10.0",
     "supertest": "^4.0.2"

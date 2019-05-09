@@ -7,13 +7,8 @@ const expressError = require('../helpers/expressError');
 
 router.post('/', async function (req, res, next) {
   let {username, password} = req.body;
-  
-  try {
-    let result;
-    return res.json({ jobs: result });
-  } catch (err) {
-    next(err);
-  }
+
+  return res.json({token: result});
 });
 
 module.exports = login;

@@ -14,6 +14,7 @@ app.use(express.json());
 // add logging system
 app.use(morgan("tiny"));
 
+
 /** 404 handler */
 app.use('/companies', companies);
 app.use('/jobs', jobs);
