@@ -26,9 +26,12 @@ router.post('/', async function(req, res, next){
     if(isValid.errors.length) {
       throw new expressError('invalid form', 400);
     }
-
-    const results = await Job.create(req.body);
-    return res.status(201).json({job: results});
+    try{
+      const results = await Job.create(req.body);
+      return res.status(201).json({job: results});
+    } catch (err){
+      throw new expressError('ERROR: no handle of that name', 400);
+    }
   } catch(err) {
     next(err);
   }

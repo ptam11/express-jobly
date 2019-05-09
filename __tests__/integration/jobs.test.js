@@ -59,7 +59,7 @@ describe('GET /jobs', function () {
     expect(res.body).toEqual(expRes);
   });
 
-  test('it should retreive a specified company from the DB', async function () {
+  test('it should retreive a specified job from the DB', async function () {
     const res = await request(app).get('/jobs/1');
     const expRes = {
       job:
@@ -90,8 +90,8 @@ describe('GET /jobs', function () {
 
   // TODO: test querystring search on GET req
 
-  test('it should send error when trying to retreive company not in DB', async function () {
-    const res = await request(app).get('/jobs/LOLNO');
+  test('it should send error when trying to retreive job not in DB', async function () {
+    const res = await request(app).get('/jobs/20');
 
     expect(res.statusCode).toBe(404);
   });
@@ -105,24 +105,18 @@ describe('POST /jobs', function () {
     const chemist = {
       "title": "Chemist",
       "salary": 10500.00,
-      "equity": 5.00,
-      "company_handle": "SBUX",
-      "date_posted": testDate
+      "equity": 0.00,
+      "company_handle": "SBUX"
     };
     const res = await request(app)
       .post('/jobs')
       .send(chemist);
     expect(res.statusCode).toBe(201);
-    expect(res.body).toEqual({
-      job: {
-        id: 2,
-        "title": "Chemist",
-        "salary": 10500.00,
-        "equity": 5.00,
-        "company_handle": "SBUX",
-        "date_posted": testDate
-      }
-    });
+    expect(res.body.job).toHaveProperty('title', "Chemist");
+    expect(res.body.job).toHaveProperty('salary');
+    expect(res.body.job).toHaveProperty('equity');
+    expect(res.body.job).toHaveProperty('company_handle');
+
     let getAll = await db.query(`select * from jobs`);
     expect(getAll.rows).toHaveLength(2);
   });
@@ -166,7 +160,7 @@ describe('PATCH /jobs', function () {
       "id": 1,
       "title": "tester",
       "salary": 9000.00,
-      "equity": 100.00,
+      "equity": 1.00,
       "company_handle": "SBUX",
       "date_posted": testDate
     };
@@ -199,7 +193,7 @@ describe('PATCH /jobs', function () {
 describe('DELETE /jobs', function () {
   // testing DELETE rquests for /jobs route
 
-  test('it should delete a company from the database', async function () {
+  test('it should delete a job from the database', async function () {
     const res = await request(app)
       .delete('/jobs/1');
     expect(res.statusCode).toBe(200);
@@ -207,7 +201,7 @@ describe('DELETE /jobs', function () {
     expect(getAll.rows).toHaveLength(0);
   });
 
-  test('it should throw an error when trying to delete company not in DB', async function () {
+  test('it should throw an error when trying to delete job not in DB', async function () {
     const res = await request(app)
       .delete('/jobs/4');
     expect(res.statusCode).toBe(404);

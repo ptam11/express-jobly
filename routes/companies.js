@@ -70,7 +70,6 @@ router.patch('/:handle', async function(req, res, next){
 router.delete('/:handle', async function(req, res, next){
   try {
     const results = await Company.delete(req.params.handle);
-    console.log(results.rowCount);
     if(results.rowCount === 1) {
       return res.json({message: "Company deleted"});
     } else {
