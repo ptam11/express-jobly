@@ -97,12 +97,12 @@ class User {
       `SELECT * FROM users WHERE username=$1`,
       [username]
     );
-    console.log(user);
       
     if(user) {
-      const isValid = bcrypt.compare(password, user.rows[0].password);
+      const { username, is_admin } = user.rows[0];
+      const isValid = await bcrypt.compare(password, user.rows[0].password);
       if (isValid) {
-        return user;
+        return ({username, is_admin});
       } else {
         throw new ExpressError('Invalid credentials', 401);
       }
