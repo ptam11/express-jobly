@@ -5,7 +5,7 @@ const Company = require('../models/companyModel');
 const jsonschema = require('jsonschema');
 const companiesSchema = require('../schema/companiesSchema');
 const expressError = require('../helpers/expressError');
-const { isAuthorized } = require('../middleware/authorization');
+const { isAuthorized, isAdmin } = require('../middleware/authorization');
 
 // const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require('../config');
@@ -21,7 +21,7 @@ router.get('/', isAuthorized, async function(req, res, next){
   }
 });
 
-router.post('/', async function(req, res, next){
+router.post('/', isAdmin, async function(req, res, next){
   try {
     const isValid = jsonschema.validate(req.body, companiesSchema);
     
@@ -48,7 +48,7 @@ router.get('/:handle', isAuthorized, async function(req, res, next){
   }
 });
 
-router.patch('/:handle', async function(req, res, next){
+router.patch('/:handle', isAdmin, async function(req, res, next){
   try {
     const existingData = await Company.findOne(req.params.handle);
     if (!existingData.rowCount) {
@@ -68,7 +68,7 @@ router.patch('/:handle', async function(req, res, next){
   }
 });
 
-router.delete('/:handle', async function(req, res, next){
+router.delete('/:handle', isAdmin, async function(req, res, next){
   try {
     const results = await Company.delete(req.params.handle);
     if(results.rowCount === 1) {

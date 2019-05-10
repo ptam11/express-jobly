@@ -38,7 +38,7 @@ function isAdmin(req, res, next){
     let token = jwt.verify(tokenString, SECRET_KEY);
     res.locals.isAdmin = token.is_admin;
     if (token.is_admin) {
-      return next;
+      return next();
     } else {
       throw new ExpressError('Admin rights required', 401);
     }
