@@ -1,14 +1,19 @@
 const express = require('express');
 const router = new express.Router();
-// const Company = require('../models/companyModel');
-// const jsonschema = require('jsonschema');
-// const companiesSchema = require('../schema/companiesSchema');
-// const expressError = require('../helpers/expressError');
+const User = require('../models/userModel');
+const createToken = require('../helpers/createToken');
 
 router.post('/', async function (req, res, next) {
-  let {username, password} = req.body;
-
-  return res.json({token: result});
+  try {
+    const { username, password } = req.body;
+    const user = await User.authenticate(username, password);
+    
+    const token = createToken(user);
+    return res.json({token});
+    
+  } catch (error) {
+    return next(error)
+  }
 });
 
 module.exports = router;
