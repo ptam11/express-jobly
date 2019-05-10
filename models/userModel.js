@@ -38,18 +38,20 @@ class User {
   **/
   static async create(data) {    
     const hashedPass = await bcrypt.hash(data.password, 12);
-    console.log(hashedPass);
-    
-    let results = await db.query(
+    if (!data.is_admin) {
+      data.is_admin = false;
+    }
+
+    const res = await db.query(
       `INSERT INTO users 
           (username, password, first_name, last_name, email, photo_url, is_admin)
           VALUES ($1, $2, $3, $4, $5, $6, $7) 
           RETURNING username, first_name, last_name, email, photo_url;`,
       [ data.username, hashedPass, data.first_name, data.last_name, data.email, data.photo_url, data.is_admin ]
     );
-    console.log(results);
+    console.log(res);
     
-    return results.rows[0];
+    return res.rows[0];
   }
 
   /**

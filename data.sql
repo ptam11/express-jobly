@@ -41,12 +41,3 @@ INSERT INTO jobs
 INSERT INTO jobs
               (title, salary, equity, company_handle, date_posted)
             Values ('tester', 1000.00, 0, 'b', CURRENT_TIMESTAMP);
-INSERT INTO users
-              (username, password, first_name, last_name, email, photo_url, is_admin)
-            Values ('ptam', 'ptam', 'parco', 'tam', 'ptam@rithm.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp', false);
-INSERT INTO users
-              (username, password, first_name, last_name, email, photo_url, is_admin)
-            Values ('jmatthias', 'jmatthias', 'json', 'mattttttt', 'jmatt@rithm.com', 'http://japamat.com/imgs/headshot.jpg', true);
-INSERT INTO users
-              (username, password, first_name, last_name, email, photo_url, is_admin)
-            Values ('rb', 'rb', 'ricky', 'b', 'rb@rithm.com', 'https://www.guidedogs.org/wp-content/uploads/2018/01/Mobile.jpg', false);
