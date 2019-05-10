@@ -39,25 +39,25 @@ async function createData() {
     `2019-05-08T23:34:42.000000`
   ]);
 
-  await db.query (`
-  INSERT INTO users (
-    username,
-    password,
-    first_name,
-    last_name,
-    email,
-    photo_url,
-    is_admin
-  )
-    VALUES (
-      'ptam',
-      'ptam',
-      'parco',
-      'tam',
-      'ptam@rithm.com',
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp',
-      false);
-  `);
+  await db.query (
+    `INSERT INTO users (
+      username,
+      password,
+      first_name,
+      last_name,
+      email,
+      photo_url,
+      is_admin
+    )
+      VALUES (
+        'ptam',
+        'ptam',
+        'Parco',
+        'Tam',
+        'ptam@rithm.com',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp',
+        false);`
+  );
 }
 module.exports = {
   createData

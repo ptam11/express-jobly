@@ -65,8 +65,6 @@ describe('GET /users', function() {
     delete user['password'];
     delete user['is_admin'];
 
-    console.log()
-
     // wrap in users for array of users
     const expRes = { users: [ user ] };
 
