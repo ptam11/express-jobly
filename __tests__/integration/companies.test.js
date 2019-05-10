@@ -3,7 +3,7 @@ const request = require('supertest');
 
 // app imports
 const app = require('../../app');
-const { createData } = require('../../_test-common');
+const { createData } = require('../../helpers/_test-common');
 const db = require('../../db');
 
 beforeEach(createData);

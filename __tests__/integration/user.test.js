@@ -3,7 +3,7 @@ const request = require('supertest');
 
 // app imports
 const app = require('../../app');
-const { createData } = require('../../_test-common');
+const { createData } = require('../../helpers/_test-common');
 const db = require('../../db');
 
 // json of response for just 1 user, needs to be wrapped by object 'user' || 'users'
