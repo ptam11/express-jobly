@@ -11,6 +11,7 @@ const { SECRET_KEY } = require('../config');
 
 router.get('/' , async function(req, res, next){
   let params = req.query;
+  console.log(params)
   try{
     let result = await User.findAll(params);
     return res.status(200).json({users: result});

@@ -7,21 +7,13 @@ const { createData } = require('../../_test-common');
 const db = require('../../db');
 
 // json of response for just 1 user, needs to be wrapped by object 'user' || 'users'
-let user = {};
-let newUser = {};
-let patchUser = {};
-
-// username: a primary key that is text
-// password: a non-nullable column
-// first_name: a non-nullable column
-// last_name: a non-nullable column
-// email: a non-nullable column that is and unique
-// photo_url: a column that is text
-// is_admin: a column that is not null, boolean and defaults to false
+let user;
+let newUser;
+let patchUser;
 
 // create a username 'ptam'
-beforeEach(() => {
-  createData;
+beforeEach(async () => {
+  await createData();
   user = {
     username: 'ptam',
     password: 'ptam',

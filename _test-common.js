@@ -49,14 +49,16 @@ async function createData() {
       photo_url,
       is_admin
     )
-      VALUES (
-        'ptam',
-        'ptam',
-        'Parco',
-        'Tam',
-        'ptam@rithm.com',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp',
-        false);`
+      VALUES ($1, $2, $3, $4, $5, $6, $7);`,
+    [
+      'ptam',
+      'ptam',
+      'Parco',
+      'Tam',
+      'ptam@rithm.com',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp',
+      false
+    ]
   );
 }
 module.exports = {

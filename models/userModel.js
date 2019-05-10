@@ -17,7 +17,8 @@ class User {
 
     // search for partial match of 'username'
     if (data.search) {
-      param.push(data.search);
+      // added '%' to make ILIKE work
+      param.push(`%${data.search}%`);
       expressions.push(`username ILIKE $${param.length}`);
     }
 
