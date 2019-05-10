@@ -3,9 +3,20 @@ const { SECRET_KEY }  = require('../config');
 const bcrpyt = require('bcrypt');
 
 
-function isLoggedIn(req, res, next){
-  let {username, password} = obj;
-  let bPassword = bcrpyt(password)
+function isCurUser(req, res, next){
+  try {
+    let tokenString = req.body._token;
+    let token = jwt.verify(tokenString, SECRET_KEY);
+    res.locals.username = token.username;
+
+    if (res.locals.username === req.params.username) {
+      return next;
+    } else {
+      throw new ExpressError('Incorrect username', 401)
+    }
+  } catch (error) {
+    return next(error);
+  }
 }
 
 function isAuthorized(req, res, next){
@@ -15,11 +26,27 @@ function isAuthorized(req, res, next){
     res.locals.username = token.username;
     return next;    
   } catch (error) {
-    return next(error)
+    return next(error);
   }
 }
 
 function isAdmin(req, res, next){
-  let {username, password} = obj;
-  
+  try {
+    let tokenString = req.body._token;
+    let token = jwt.verify(tokenString, SECRET_KEY);
+    res.locals.isAdmin = token.is_admin;
+    if (token.is_admin) {
+      return next;
+    } else {
+      throw new ExpressError('Admin rights required', 401)
+    }
+  } catch (error) {
+    return next(error);
+  }
 }
+
+module.exports = {
+  isAuthorized,
+  isCurUser,
+  isAdmin
+};
