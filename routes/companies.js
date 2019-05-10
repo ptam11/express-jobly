@@ -5,12 +5,13 @@ const Company = require('../models/companyModel');
 const jsonschema = require('jsonschema');
 const companiesSchema = require('../schema/companiesSchema');
 const expressError = require('../helpers/expressError');
+const { isAuthorized } = require('../middleware/authorization');
 
 // const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require('../config');
 // const bcrypt = require('bcrypt');
 
-router.get('/' , async function(req, res, next){
+router.get('/', isAuthorized, async function(req, res, next){
   let params = req.query;
   try{
     let result = await Company.findAll(params);
@@ -35,7 +36,7 @@ router.post('/', async function(req, res, next){
   }
 });
 
-router.get('/:handle', async function(req, res, next){
+router.get('/:handle', isAuthorized, async function(req, res, next){
   try {
     const results = await Company.findOne(req.params.handle);
     if (!results.rowCount) {

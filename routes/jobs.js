@@ -4,15 +4,18 @@ const Job = require('../models/jobModel');
 const jsonschema = require('jsonschema');
 const jobSchema = require('../schema/jobSchema');
 const ExpressError = require('../helpers/expressError');
+const { isAuthorized } = require('../middleware/authorization');
 
 // const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require('../config');
 // const bcrypt = require('bcrypt');
 
 //seperate concerns of db and routes
-router.get('/', async function (req, res, next) {
-  let params = req.query;
+router.get('/', isAuthorized, async function (req, res, next) {
   try {
+    console.log('here');
+    
+    let params = req.query;
     let result = await Job.findAll(params);
     return res.json({ jobs: result });
   } catch (err) {
@@ -39,7 +42,7 @@ router.post('/', async function (req, res, next) {
   }
 });
 
-router.get('/:id', async function (req, res, next) {
+router.get('/:id', isAuthorized, async function (req, res, next) {
   try {
     const results = await Job.findOne(req.params.id);
 

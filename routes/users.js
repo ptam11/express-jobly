@@ -4,6 +4,7 @@ const User = require('../models/userModel');
 const jsonschema = require('jsonschema');
 const usersSchema = require('../schema/usersSchema');
 const ExpressError = require('../helpers/ExpressError');
+const { isAuthorized, isCurUser } = require('../middleware/authorization');
 
 // const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require('../config');
@@ -53,8 +54,13 @@ router.get('/:username', async function(req, res, next){
   }
 });
 
-router.patch('/:username', async function(req, res, next){
+router.patch('/:username', isCurUser, async function(req, res, next){
   try {
+    // prevent making empty requests, will expect a token at minimum
+    if (Object.keys(req.body).length < 2) {
+      throw new ExpressError('Changes must be provided for PATCH request', 400);
+    }
+
     const existingData = await User.findOne(req.params.username);
     if (!existingData) {
       throw new ExpressError('user not found', 404);
@@ -62,12 +68,19 @@ router.patch('/:username', async function(req, res, next){
     // combining the partial data to pass schema
     const combinedData = Object.assign(existingData, req.body);
     const isValid = jsonschema.validate(combinedData, usersSchema);
+
     if(isValid.errors.rowCount) {
       // get all errors from schema for all invalid fields
       let errors = isValid.errors.map(error => error.stack);
       throw new ExpressError(errors, 400);
     }
-    // using req.body to patch only requested data
+    
+    // requires admin privelages to update admin privelages on a user   
+    if (!res.locals.isAdmin && req.body.hasOwnProperty('is_admin')) {
+      delete req.body.is_admin;
+      throw new ExpressError('Must be an admin to change admin privelages', 401);
+    }
+
     const results = await User.update(req.params.username, req.body);
     return res.json({user: results});
   } catch(err) {
@@ -75,7 +88,7 @@ router.patch('/:username', async function(req, res, next){
   }
 });
 
-router.delete('/:username', async function(req, res, next){
+router.delete('/:username', isCurUser, async function(req, res, next){
   try {
     const results = await User.delete(req.params.username);
     

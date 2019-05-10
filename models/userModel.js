@@ -69,13 +69,27 @@ class User {
     return result.rows[0];
   }
 
+  // static async isAdmin(username) {
+  //   let result = await db.query(
+  //     `SELECT username, first_name, last_name, email, photo_url FROM users
+  //         WHERE username = $1;`,
+  //     [ username ]
+  //   );
+
+  //   // return 1 obj result
+  //   return result.rows[0];
+  // }
+
   static async update(username, data) {
     // use helper function partialUpdate(table, items, targetKey, targetVal)
     // returns parameterized query values and query
+    delete data.is_admin;
     let { query, values } = partialUpdate('users', data, 'username', username);
   
     // return patched results
     let result = await db.query(query, values);
+    delete result.rows[0].password;
+    delete result.rows[0].is_admin;
     return result.rows[0];
   }
 
