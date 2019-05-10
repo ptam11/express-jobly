@@ -27,6 +27,8 @@ router.post('/', async function(req, res, next){
       let errors = isValid.errors.map(err => err.stack);
       throw new ExpressError(errors, 400);
     }
+    console.log('routes: post request to /user ');
+    
     try{
       const results = await User.create(req.body);
       return res.status(201).json({user: results});

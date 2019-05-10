@@ -1,7 +1,7 @@
 const db = require('../db');
-const app = require('../app');
 const ExpressError = require('../helpers/expressError');
 const partialUpdate = require('../helpers/partialUpdate');
+const bcrypt = require('bcrypt');
 
 class User {
 
@@ -37,12 +37,14 @@ class User {
   * data may not contain is_admin, if not, DEFAULT false in 'data.sql'
   **/
   static async create(data) {
+    const hashedPass = await bcrypt.hash(data.password, 12);
+
     let results = await db.query(
       `INSERT INTO users 
           (username, password, first_name, last_name, email, photo_url, is_admin)
           VALUES ($1, $2, $3, $4, $5, $6, $7) 
           RETURNING username, first_name, last_name, email, photo_url;`,
-      [ data.username, data.password, data.first_name, data.last_name, data.email, data.photo_url, data.is_admin ]
+      [ data.username, hashedPass, data.first_name, data.last_name, data.email, data.photo_url, data.is_admin ]
     );
     return results.rows[0];
   }
@@ -83,6 +85,25 @@ class User {
 
     // return results, should always be 1, not 0
     return results.rows[0];
+  }
+
+  static async authenticate(username, password) {
+    const user = await db.query(
+      `SELECT * FROM users WHERE username=$1`,
+      [username]
+    );
+    console.log(user);
+      
+    if(user) {
+      const isValid = bcrypt.compare(password, user.rows[0].password);
+      if (isValid) {
+        return user;
+      } else {
+        throw new ExpressError('Invalid credentials', 401);
+      }
+    } else {
+      throw new ExpressError('User not found', 404);
+    } 
   }
 }
 module.exports = User;
