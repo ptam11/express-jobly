@@ -61,6 +61,39 @@ async function createData() {
     ]
   );
 }
+
+// for json input/output refactoring
+// needs to be wrapped by an object of 'user' || 'users'
+
+const user = {
+  username: 'ptam',
+  password: 'ptam',
+  first_name: 'Parco',
+  last_name: 'Tam',
+  email: 'ptam@rithm.com',
+  photo_url:
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp',
+  is_admin: false
+};
+
+const newUser = {
+  username: 'jmatthias',
+  password: 'jmatthias',
+  first_name: 'Jason',
+  last_name: 'Matthias',
+  email: 'jmatthias@rithm.com',
+  photo_url:
+    'http://japamat.com/imgs/headshot.jpg',
+  is_admin: true
+};
+
+const patchUser = {
+  first_name: 'Vince',
+  last_name: 'Carter'
+};
 module.exports = {
-  createData
+  createData,
+  user,
+  newUser,
+  patchUser,
 };

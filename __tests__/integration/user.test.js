@@ -3,43 +3,12 @@ const request = require('supertest');
 
 // app imports
 const app = require('../../app');
-const { createData } = require('../../helpers/_test-common');
+const { createData, user, newUser, patchUser } = require('../../helpers/_test-common');
 const db = require('../../db');
-
-// json of response for just 1 user, needs to be wrapped by object 'user' || 'users'
-let user;
-let newUser;
-let patchUser;
 
 // create a username 'ptam'
 beforeEach(async () => {
   await createData();
-  user = {
-    username: 'ptam',
-    password: 'ptam',
-    first_name: 'Parco',
-    last_name: 'Tam',
-    email: 'ptam@rithm.com',
-    photo_url:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCZRdW_GBvY_lzXhuDxX--xTn7CmoBBIU3kpmMOj6gBTF2lLmp',
-    is_admin: false
-  };
-
-  newUser = {
-    username: 'jmatthias',
-    password: 'jmatthias',
-    first_name: 'Jason',
-    last_name: 'Matthias',
-    email: 'jmatthias@rithm.com',
-    photo_url:
-			'http://japamat.com/imgs/headshot.jpg',
-    is_admin: true
-  };
-
-  patchUser = {
-    first_name: 'Vince',
-    last_name: 'Carter'
-  };
 });
 
 afterAll(function() {
@@ -106,6 +75,8 @@ describe('POST /users', function() {
 
   test('it should add a user to the database', async function() {
     const res = await request(app).post('/users').send(newUser);
+    delete newUser['password'];
+    delete newUser['is_admin'];
     const expRes = { user: newUser };
 
     // expect {user: {username, first_name, last_name, email, photo_url}}
@@ -113,8 +84,8 @@ describe('POST /users', function() {
     expect(res.body).toEqual(expRes);
 
     // expect 2 results from database. Used routes to test.
-    const getAll = await request(app).get('/users');
-    expect(getAll.users).toHaveLength(2);
+    const resGet = await request(app).get('/users');
+    expect(resGet.body.users).toHaveLength(2);
   });
 
   test(`it should throw an error if new user has missing NOT NULL first_name`, async function() {
@@ -132,7 +103,7 @@ describe('PATCH /users/:username', function() {
 
   test('it should update newUser in the database', async function() {
     // creating expected results by merging patched fields with fields that were not changed
-    const expRes = { user: Object.assign(patchUser, newUser) };
+    const expRes = { user: Object.assign(patchUser, user) };
 
     const res = await request(app).patch(`/users/${user.username}`).send(patchUser);
 
@@ -156,8 +127,8 @@ describe('DELETE /users/:user', function() {
     
     // expect DB to have 0 rows
     expect(res.statusCode).toBe(200);
-    const getAll = await request(app).get('/users');
-    expect(getAll.users).toHaveLength(0);
+    const resGet = await request(app).get('/users');
+    expect(resGet.body.users).toHaveLength(0);
   });
 
   test('it should throw an error when trying to delete company not in DB', async function() {

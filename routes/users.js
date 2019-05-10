@@ -11,10 +11,9 @@ const { SECRET_KEY } = require('../config');
 
 router.get('/' , async function(req, res, next){
   let params = req.query;
-  console.log(params)
   try{
-    let result = await User.findAll(params);
-    return res.status(200).json({users: result});
+    let results = await User.findAll(params);
+    return res.status(200).json({users: results});
   } catch (err){
     next(err);
   }
@@ -80,7 +79,7 @@ router.delete('/:username', async function(req, res, next){
   try {
     const results = await User.delete(req.params.username);
     
-    if(results.rowCount === 1) {
+    if(results) {
       return res.json({message: "user deleted"});
     } else {
       throw new ExpressError("user not found", 404);

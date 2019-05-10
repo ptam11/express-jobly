@@ -50,7 +50,6 @@ class User {
           RETURNING username, first_name, last_name, email, photo_url;`,
       [ data.username, hashedPass, data.first_name, data.last_name, data.email, data.photo_url, data.is_admin ]
     );
-    console.log(res);
     
     return res.rows[0];
   }
@@ -61,7 +60,7 @@ class User {
   static async findOne(username) {
     // find user by username
     let result = await db.query(
-      `SELECT * FROM users
+      `SELECT username, first_name, last_name, email, photo_url FROM users
           WHERE username = $1;`,
       [ username ]
     );
@@ -84,8 +83,8 @@ class User {
     // delete
     let results = await db.query(
       `DELETE FROM users 
-          WHERE username = $1;
-          RETURNING *`,
+          WHERE username = $1
+          RETURNING username, password, first_name, last_name, email, photo_url;`,
       [ username ]
     );
 
