@@ -1,19 +1,25 @@
 const jwt = require('jsonwebtoken');
-const  = require('');
+const { SECRET_KEY }  = require('../config');
 const bcrpyt = require('bcrypt');
 
 
-function isLoggedIn(obj){
+function isLoggedIn(req, res, next){
   let {username, password} = obj;
   let bPassword = bcrpyt(password)
 }
 
-function isAuthorized(obj){
-  let {username, password} = obj;
-  
+function isAuthorized(req, res, next){
+  try {
+    let tokenString = req.body._token || req.query._token;
+    let token = jwt.verify(tokenString, SECRET_KEY);
+    res.locals.username = token.username;
+    return next;    
+  } catch (error) {
+    return next(error)
+  }
 }
 
-function isAdmin(obj){
+function isAdmin(req, res, next){
   let {username, password} = obj;
   
 }
