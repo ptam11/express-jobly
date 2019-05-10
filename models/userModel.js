@@ -36,9 +36,10 @@ class User {
   * create new row in DB
   * data may not contain is_admin, if not, DEFAULT false in 'data.sql'
   **/
-  static async create(data) {
+  static async create(data) {    
     const hashedPass = await bcrypt.hash(data.password, 12);
-
+    console.log(hashedPass);
+    
     let results = await db.query(
       `INSERT INTO users 
           (username, password, first_name, last_name, email, photo_url, is_admin)
@@ -46,6 +47,8 @@ class User {
           RETURNING username, first_name, last_name, email, photo_url;`,
       [ data.username, hashedPass, data.first_name, data.last_name, data.email, data.photo_url, data.is_admin ]
     );
+    console.log(results);
+    
     return results.rows[0];
   }
 

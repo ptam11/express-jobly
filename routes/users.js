@@ -33,7 +33,7 @@ router.post('/', async function(req, res, next){
       const results = await User.create(req.body);
       return res.status(201).json({user: results});
     } catch (err){
-      throw new ExpressError('ERROR: no handle of that name', 400);
+      throw new ExpressError('ERROR: something went wrong', 400);
     }
   } catch(err) {
     next(err);
