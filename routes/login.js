@@ -10,7 +10,6 @@ router.post('/', async function (req, res, next) {
     
     const token = createToken(user);
     return res.json({token});
-    
   } catch (error) {
     return next(error)
   }
